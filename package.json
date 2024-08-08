@@ -1,14 +1,18 @@
 {
   "name": "ladder-game",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs",
+    "ladder game",
+    "cli"
+  ],
+  "author": "MyeonghoonNam",
   "license": "ISC",
-  "description": "",
+  "description": "A ladder game based on the Nodejs CLI",
   "dependencies": {
     "figlet": "^1.7.0"
   }
