@@ -1,6 +1,6 @@
-const intro = require("./intro");
-const cli = require("./cli");
-const game = require("./game");
+const intro = require("./src/intro");
+const cli = require("./src/cli");
+const game = require("./src/game");
 
 async function main() {
   try {
