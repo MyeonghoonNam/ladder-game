@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const intro = require("./src/intro");
 const cli = require("./src/cli");
 const game = require("./src/game");
