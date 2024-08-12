@@ -1,5 +1,10 @@
 # LADDER GAME
 
+<a href="https://www.npmjs.com/package/ladder-game" target="_blank">
+  <img alt="Static Badge" src="https://img.shields.io/badge/npm-v1.0.5-blue">
+</a>
+<img alt="NPM Downloads" src="https://img.shields.io/npm/d18m/ladder-game">
+
 A ladder game is interactive CLI Application based on nodejs
 
 ![image](https://github.com/user-attachments/assets/f8e8278e-e805-4acb-9c86-2f4a48219414)
