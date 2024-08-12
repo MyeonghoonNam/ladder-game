@@ -1,3 +1,5 @@
+const { ANSI } = require("./constants/ansi");
+
 function game({ playerCount, playerNames, destination }) {
   const N = 5; // 사다리 높이
   const M = 2 * playerCount - 1; // 사다리 넓이
@@ -227,7 +229,9 @@ function game({ playerCount, playerNames, destination }) {
 
     for (let key of Object.keys(result)) {
       const { name, goal } = result[key];
-      console.log(`player ${key}(=${name}) arrived at ${goal}`);
+      console.log(
+        `${ANSI.FgGreen}player ${key}(=${name})${ANSI.Reset} arrived at ${ANSI.FgGreen}${goal}${ANSI.Reset}`
+      );
     }
   }
 
