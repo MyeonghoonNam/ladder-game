@@ -1,0 +1,21 @@
+# package 버전 변경에 따른 npm 배포 자동화
+name: npm CI/CD
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - uses: JS-DevTools/npm-publish@v2
+        with:
+          token: ${{ NPM_TOKEN }}
