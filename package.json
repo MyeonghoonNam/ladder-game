@@ -16,5 +16,13 @@
   "description": "A ladder game based on the Nodejs CLI",
   "dependencies": {
     "figlet": "^1.7.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3"
   }
 }
