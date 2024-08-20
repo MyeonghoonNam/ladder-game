@@ -1,6 +1,6 @@
 {
   "name": "ladder-game",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "./index.js",
   "bin": "./index.js",
   "scripts": {
@@ -16,6 +16,10 @@
   "description": "A ladder game based on the Nodejs CLI",
   "dependencies": {
     "figlet": "^1.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MyeonghoonNam/ladder-game"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
