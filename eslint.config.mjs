@@ -1,3 +1,4 @@
+import tsParser from '@typescript-eslint/parser';
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
@@ -8,7 +9,10 @@ export default [
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   {
-    files: ['**/*.js'],
-    languageOptions: { sourceType: 'commonjs', globals: globals.node },
+    files: ['**/*.ts'],
+    languageOptions: {
+      globals: globals.node,
+      parser: tsParser,
+    },
   },
 ];

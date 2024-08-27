@@ -1,13 +1,24 @@
-const { ANSI } = require('./constants/ansi');
+import { ANSI } from './constants/ansi.js';
 
-function game({ playerCount, playerNames, destination }) {
+interface GameProps {
+  playerCount: number;
+  playerNames: string[];
+  destination: string[];
+}
+
+interface Result {
+  name: string;
+  goal: string;
+}
+
+export default function Game({ playerCount, playerNames, destination }: GameProps) {
   const N = 5; // 사다리 높이
   const M = 2 * playerCount - 1; // 사다리 넓이
   const footStools = ['---', '\\-\\', '/-/'];
 
-  let board = [];
-  let ladderGraph = [];
-  let visited = [];
+  let board: string[][] = [];
+  let ladderGraph: number[][] = [];
+  let visited: number[][] = [];
 
   const dy1 = [0, 0, 1];
   const dx1 = [-1, 1, 0];
@@ -26,11 +37,11 @@ function game({ playerCount, playerNames, destination }) {
   }
 
   function randomFootStoolCount() {
-    return parseInt(Math.random() * (parseInt(M / 2) * N)) + 1;
+    return Math.floor(Math.random() * (Math.floor(M / 2) * N)) + 1;
   }
 
   function randomFootStool() {
-    return footStools[parseInt(Math.random() * footStools.length)];
+    return footStools[Math.floor(Math.random() * footStools.length)];
   }
 
   function randomFill() {
@@ -38,8 +49,8 @@ function game({ playerCount, playerNames, destination }) {
     let count = 0;
 
     while (totalFootStoolCount !== count) {
-      const x = parseInt(Math.random() * M);
-      const y = parseInt(Math.random() * N);
+      const x = Math.floor(Math.random() * M);
+      const y = Math.floor(Math.random() * N);
 
       if (board[y][x] === ' ') {
         board[y][x] = randomFootStool();
@@ -117,14 +128,14 @@ function game({ playerCount, playerNames, destination }) {
     ladderGraph.push(startAndEndLine);
   }
 
-  function isValidGraphRange(y, x) {
+  function isValidGraphRange(y: number, x: number) {
     if (y < 0 || x < 0 || y >= ladderGraph.length || x >= ladderGraph[0].length) return false;
 
     return true;
   }
 
-  function move(y, x, d = '', f) {
-    let ret = null;
+  function move(y: number, x: number, d = ''): number {
+    let ret = -1;
 
     visited[y][x] = 1;
 
@@ -145,9 +156,9 @@ function game({ playerCount, playerNames, destination }) {
         const dir = nx < x ? 'L' : nx > x ? 'R' : 'D';
 
         visited[ny][nx] = 1;
-        ret = move(ny, nx, dir, f);
+        ret = move(ny, nx, dir);
 
-        if (ret !== null) return ret;
+        if (ret !== -1) return ret;
       }
     }
 
@@ -165,7 +176,7 @@ function game({ playerCount, playerNames, destination }) {
         const dir = nx < x ? 'L' : nx > x ? 'R' : 'D';
 
         visited[ny][nx] = 1;
-        ret = move(ny, nx, dir, f);
+        ret = move(ny, nx, dir);
       }
     }
 
@@ -175,40 +186,40 @@ function game({ playerCount, playerNames, destination }) {
   function display() {
     setLadderGraph();
 
-    const result = {};
-    const ladder = board.map((row) => row.map((v) => (v === ' '.repeat(1) ? ' '.repeat(3) : v)).join('')).join('\n');
+    const result: Result[] = [];
 
-    let start = new Array(ladderGraph[0].length).fill(0);
-    let end = new Array(ladderGraph[0].length).fill(0);
+    const ladder = board.map((row) => row.map((v) => (v === ' '.repeat(1) ? ' '.repeat(3) : v)).join('')).join('\n');
+    const start: number[] = new Array(ladderGraph[0].length).fill(0);
+    const end: number[] = new Array(ladderGraph[0].length).fill(0);
 
     for (let i = 0; i < ladderGraph[0].length; i++) {
-      const player = parseInt(i / 3) + 1;
+      const player = Math.floor(i / 3) + 1;
 
       // 플레이어 시작 사다리 "|"
       if (i % 4 === 0) {
         visited = Array.from(new Array(ladderGraph.length), () => new Array(ladderGraph[0].length).fill(0));
 
-        const pos = move(0, i, '', i === 0);
+        const pos = move(0, i);
 
         start[i] = player;
         end[pos] = player;
 
-        result[parseInt(i / 4) + 1] = {
-          name: playerNames[parseInt(i / 4)],
-          goal: destination[parseInt(pos / 4)],
+        result[Math.floor(i / 4) + 1] = {
+          name: playerNames[Math.floor(i / 4)],
+          goal: destination[Math.floor(pos / 4)],
         };
       }
     }
 
-    start = start.map((v, i) => (i % 4 === 0 ? v : ' ')).join('');
-    end = end.map((v, i) => (i % 4 === 0 ? v : ' ')).join('');
+    const startResult = start.map((v, i) => (i % 4 === 0 ? v : ' ')).join('');
+    const endResult = end.map((v, i) => (i % 4 === 0 ? v : ' ')).join('');
 
-    console.log(start);
+    console.log(startResult);
     console.log(ladder);
-    console.log(end);
+    console.log(endResult);
 
     for (let key of Object.keys(result)) {
-      const { name, goal } = result[key];
+      const { name, goal } = result[Number(key)];
       console.log(`${ANSI.FgGreen}player ${key}(=${name})${ANSI.Reset} arrived at ${ANSI.FgGreen}${goal}${ANSI.Reset}`);
     }
   }
@@ -223,5 +234,3 @@ function game({ playerCount, playerNames, destination }) {
 
   display();
 }
-
-module.exports = game;

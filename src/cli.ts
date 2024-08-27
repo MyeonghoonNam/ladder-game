@@ -1,25 +1,24 @@
-const readline = require('readline');
-const { INPUT_VALIDATION_ERRORS } = require('./constants/validate');
-const { ANSI } = require('./constants/ansi');
+import readline from 'readline';
+import { INPUT_VALIDATION_ERRORS } from './constants/validate.js';
+import { ANSI } from './constants/ansi.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-function askQuestion(query) {
+function askQuestion(query: string): Promise<string> {
   return new Promise((resolve) => rl.question(query, resolve));
 }
 
-async function cli() {
+export default async function Cli() {
   const playerCount = Number(await askQuestion(`${ANSI.FgGreen}?${ANSI.Reset} How many player: `));
-
   const playerNames = [];
   const destination = [];
 
   if (playerCount <= 0 || Number.isNaN(playerCount)) {
     rl.close();
-    throw new Error(INPUT_VALIDATION_ERRORS.INPUT_VALIDATION_ERRORS);
+    throw new Error(INPUT_VALIDATION_ERRORS.INVALID_PLAYER_COUNT);
   }
 
   for (let i = 0; i < playerCount; i++) {
@@ -36,5 +35,3 @@ async function cli() {
 
   return { playerCount, playerNames, destination };
 }
-
-module.exports = cli;
