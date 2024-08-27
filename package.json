@@ -1,10 +1,14 @@
 {
   "name": "ladder-game",
   "version": "1.0.8",
-  "main": "./index.js",
-  "bin": "./index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "tsc --watch"
   },
   "keywords": [
     "nodejs",
@@ -14,19 +18,23 @@
   "author": "MyeonghoonNam",
   "license": "ISC",
   "description": "A ladder game based on the Nodejs CLI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MyeonghoonNam/ladder-game.git"
+  },
   "dependencies": {
     "figlet": "^1.7.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MyeonghoonNam/ladder-game"
-  },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/figlet": "^1.5.8",
+    "@typescript-eslint/parser": "^8.2.0",
     "eslint": "^9.9.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }
