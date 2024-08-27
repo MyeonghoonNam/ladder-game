@@ -4,11 +4,11 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "start": "npm run build && node ./dist/index.js",
+    "build": "rm -rf ./dist && rollup -c",
+    "dev": "rollup -cw"
   },
   "keywords": [
     "nodejs",
@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/figlet": "^1.5.8",
     "@typescript-eslint/parser": "^8.2.0",
     "eslint": "^9.9.0",
@@ -34,6 +36,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
     "prettier": "^3.3.3",
+    "rollup": "^4.21.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   }

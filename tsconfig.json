@@ -2,12 +2,13 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
-    "moduleResolution":"NodeNext",
-    "outDir": "dist",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "ts-node": {
     "esm": true
