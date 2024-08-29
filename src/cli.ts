@@ -12,7 +12,10 @@ function askQuestion(query: string): Promise<string> {
 }
 
 export default async function Cli() {
-  const playerCount = Number(await askQuestion(`${ANSI.FgGreen}?${ANSI.Reset} How many player: `));
+  const playerCount = Number(
+    await askQuestion(`${ANSI.FgGreen}? ${ANSI.FgBrightWhite}How many player?${ANSI.Reset} (From 2 to 10) >> `)
+  );
+
   const playerNames = [];
   const destination = [];
 
@@ -22,12 +25,18 @@ export default async function Cli() {
   }
 
   for (let i = 0; i < playerCount; i++) {
-    const answer = await askQuestion(`${ANSI.FgGreen}?${ANSI.Reset} Enter a name for player ${i + 1}: `);
+    const answer = await askQuestion(
+      `${ANSI.FgGreen}? ${ANSI.FgBrightWhite}Enter a name for player ${i + 1}${ANSI.Reset} (String length from 1 to 10 characters) >> `
+    );
+
     playerNames.push(answer);
   }
 
   for (let i = 0; i < playerCount; i++) {
-    const answer = await askQuestion(`${ANSI.FgGreen}?${ANSI.Reset} Enter a destination for ${i + 1}: `);
+    const answer = await askQuestion(
+      `${ANSI.FgGreen}? ${ANSI.FgBrightWhite}Enter a destination for ${i + 1}${ANSI.Reset} (String length from 1 to 10 characters) >> `
+    );
+
     destination.push(answer);
   }
 
