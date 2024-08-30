@@ -4,7 +4,7 @@
 
 A ladder game is interactive CLI Application based on nodejs
 
-![image](https://github.com/user-attachments/assets/f8e8278e-e805-4acb-9c86-2f4a48219414)
+![image](https://github.com/user-attachments/assets/ac4e0faf-8226-4f7a-afaa-f904e6979f61)
 
 ## Usage
 
