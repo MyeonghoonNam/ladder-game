@@ -10,10 +10,15 @@ interface Result {
   name: string;
   goal: string;
 }
-
+/**
+ * Ladder Game progress function
+ * @param playerCount Total number of players
+ * @param playerNames Set of player names
+ * @param destination Set of destination names
+ */
 export default function Game({ playerCount, playerNames, destination }: GameProps) {
-  const N = 5; // 사다리 높이
-  const M = 2 * playerCount - 1; // 사다리 넓이
+  const N = 5; // ladder height
+  const M = 2 * playerCount - 1; // ladder width
   const footStools = ['---', '\\-\\', '/-/'];
 
   let board: string[][] = [];
@@ -26,6 +31,9 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
   const dy2 = [-1, -1, 1, 1];
   const dx2 = [-1, 1, 1, -1];
 
+  /**
+   * ladder structure initialization function without footStool
+   */
   function reset() {
     board = Array.from(new Array(N), () => new Array(M));
 
@@ -36,14 +44,25 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     }
   }
 
+  /**
+   * function for getting the total number of random footStool
+   * @returns total number of random footStool
+   */
   function randomFootStoolCount() {
     return Math.floor(Math.random() * (Math.floor(M / 2) * N)) + 1;
   }
 
+  /**
+   * function for getting only one footStool of footStools
+   * @returns one random footStool
+   */
   function randomFootStool() {
     return footStools[Math.floor(Math.random() * footStools.length)];
   }
 
+  /**
+   * function to fill an empty ladder with random footStools
+   */
   function randomFill() {
     let totalFootStoolCount = randomFootStoolCount();
     let count = 0;
@@ -59,6 +78,10 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     }
   }
 
+  /**
+   * funtion to validate correct ladder structure
+   * @returns validate the correct ladder structure
+   */
   function analyze() {
     for (let i = 0; i < N; i++) {
       for (let j = 1; j < M - 1; j++) {
@@ -79,6 +102,9 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     return true;
   }
 
+  /**
+   * data structure setup function for ladder move
+   */
   function setLadderGraph() {
     ladderGraph = Array.from(new Array(N * 3), () => new Array(M * 2 - 1).fill(0));
 
@@ -128,12 +154,24 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     ladderGraph.push(startAndEndLine);
   }
 
+  /**
+   * validate graph coordinates function
+   * @param y coordinate
+   * @param x coordinate
+   * @returns verification result
+   */
   function isValidGraphRange(y: number, x: number) {
     if (y < 0 || x < 0 || y >= ladderGraph.length || x >= ladderGraph[0].length) return false;
-
     return true;
   }
 
+  /**
+   * ladder move function
+   * @param y coordinate
+   * @param x coordinate
+   * @param d previous direction
+   * @returns destination x coordinate
+   */
   function move(y: number, x: number, d = ''): number {
     let ret = -1;
 
@@ -143,7 +181,7 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
       return x;
     }
 
-    // 좌, 우, 하 사다리 이동 예외 처리
+    // handling left, right, down directions
     for (let i = 0; i < dy1.length; i++) {
       const ny = y + dy1[i];
       const nx = x + dx1[i];
@@ -162,7 +200,7 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
       }
     }
 
-    // 대각 4방향 사다리 이동 예외처리
+    // handling diagonal directions
     for (let i = 0; i < dy2.length; i++) {
       const ny = y + dy2[i];
       const nx = x + dx2[i];
@@ -183,6 +221,9 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     return ret;
   }
 
+  /**
+   * game result print function
+   */
   function display() {
     setLadderGraph();
 
@@ -195,7 +236,7 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     for (let i = 0; i < ladderGraph[0].length; i++) {
       const player = Math.floor(i / 3) + 1;
 
-      // 플레이어 시작 사다리 "|"
+      // player start x coordinates
       if (i % 4 === 0) {
         visited = Array.from(new Array(ladderGraph.length), () => new Array(ladderGraph[0].length).fill(0));
 
