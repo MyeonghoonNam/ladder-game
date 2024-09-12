@@ -9,10 +9,16 @@ export default [
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
+      globals: globals.browser,
+      parser: tsParser,
+    },
+  },
+  {
+    files: ['**/*.cjs'],
     languageOptions: {
       globals: globals.node,
-      parser: tsParser,
     },
   },
 ];
