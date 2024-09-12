@@ -14,5 +14,5 @@ npx ladder-game
 
 ## Wiki
 
-- [package.json 파헤치기](https://velog.io/@codenmh0822/package.json-%ED%8C%8C%ED%97%A4%EC%B9%98%EA%B8%B0)
-- [npm 패키지 배포하기](https://velog.io/@codenmh0822/npm-%ED%8C%A8%ED%82%A4%EC%A7%80-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B0)
+Documented experience with the software development cycle. <br/>
+[Read more](https://github.com/MyeonghoonNam/ladder-game/wiki)
