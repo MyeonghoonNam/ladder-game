@@ -3,9 +3,9 @@ name: npm CI/CD
 
 on:
   push:
-    branches: ['main']
+    branches: ['cli']
   pull_request:
-    branches: ['main']
+    branches: ['cli']
 
 jobs:
   publish:
