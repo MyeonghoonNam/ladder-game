@@ -1,14 +1,20 @@
 import { useState } from 'react';
+import { PlayerCounter } from './components';
 
 function App() {
-  const [state, setState] = useState(0);
+  const [count, setCount] = useState(2);
+
+  const decrementCount = () => {
+    setCount((state) => state - 1);
+  };
+
+  const incrementCount = () => {
+    setCount((state) => state + 1);
+  };
 
   return (
     <div className="App">
-      <button type="button" onClick={() => setState((state) => state + 1)}>
-        Click
-      </button>
-      <span>{state}</span>
+      <PlayerCounter count={count} onDecrementButtonClick={decrementCount} onIncrementButtonClick={incrementCount} />
     </div>
   );
 }
