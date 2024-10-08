@@ -14,6 +14,10 @@ export default [
       globals: globals.browser,
       parser: tsParser,
     },
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
+    },
   },
   {
     files: ['**/*.cjs'],
