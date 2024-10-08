@@ -13,12 +13,13 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": true
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "exclude": ["node_modules"]
