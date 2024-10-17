@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 
 import * as Styled from './styled';
 
@@ -16,19 +16,20 @@ const Ladder = ({ playerCount }: LadderProps) => {
   };
 
   return (
-    <Styled.Container>
+    <Styled.Container playerCount={playerCount}>
       {new Array(playerCount * 2).fill(0).map((_, idx) => (
-        <>
+        <Fragment key={`id_${idx}`}>
           <input
-            key={`id_${idx}`}
             type="text"
             ref={(el) => (inputRef.current[idx] = el)}
             placeholder={`${idx < playerCount ? 'Player' : 'Goal'} ${(idx % playerCount) + 1}`}
           />
-          {idx === playerCount - 1 && <div>Ladder</div>}
-        </>
+          {idx === playerCount - 1 && <div className="ladder">Ladder</div>}
+        </Fragment>
       ))}
-      <div>
+
+      <div className="controller">
+        <button type="button">취소</button>
         <button type="button" onClick={handleGameStartButtonClick}>
           시작
         </button>
