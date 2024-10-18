@@ -4,6 +4,6 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid 1px blue;
-  height: 100vh;
+  width: 100%;
+  height: calc(var(--vh, 1vh) * 100);
 `;

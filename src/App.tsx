@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlayerCounter, Ladder } from './components';
 import { FlexBox } from './styles/common';
 import * as Styled from './styled';
@@ -18,6 +18,15 @@ function App() {
   const handleCountSetupButtonClick = () => {
     setHasCount(true);
   };
+
+  useEffect(() => {
+    const setScreenSize = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setScreenSize();
+  }, []);
 
   return (
     <Styled.Container className="App">
