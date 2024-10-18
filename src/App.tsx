@@ -3,8 +3,10 @@ import { PlayerCounter, Ladder } from './components';
 import { FlexBox } from './styles/common';
 import * as Styled from './styled';
 
+const INITIAL_COUNT = 2;
+
 function App() {
-  const [count, setCount] = useState(2);
+  const [count, setCount] = useState(INITIAL_COUNT);
   const [hasCount, setHasCount] = useState(false);
 
   const decrementCount = () => {
@@ -17,6 +19,11 @@ function App() {
 
   const handleCountSetupButtonClick = () => {
     setHasCount(true);
+  };
+
+  const handleCancleButtonClick = () => {
+    setHasCount(false);
+    setCount(INITIAL_COUNT);
   };
 
   useEffect(() => {
@@ -42,7 +49,7 @@ function App() {
           </button>
         </FlexBox>
       ) : (
-        <Ladder playerCount={count} />
+        <Ladder playerCount={count} onCancle={handleCancleButtonClick} />
       )}
     </Styled.Container>
   );

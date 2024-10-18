@@ -5,9 +5,10 @@ import * as Styled from './styled';
 
 interface LadderProps {
   playerCount: number;
+  onCancle?: () => void;
 }
 
-const Ladder = ({ playerCount }: LadderProps) => {
+const Ladder = ({ playerCount, onCancle }: LadderProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
 
@@ -52,7 +53,9 @@ const Ladder = ({ playerCount }: LadderProps) => {
       ))}
 
       <Styled.Controller playerCount={playerCount}>
-        <button type="button">취소</button>
+        <button type="button" onClick={onCancle}>
+          취소
+        </button>
         <button type="button">시작</button>
       </Styled.Controller>
     </Styled.Container>
