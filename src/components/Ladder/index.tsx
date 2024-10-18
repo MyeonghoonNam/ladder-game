@@ -1,4 +1,5 @@
 import { Fragment, useRef } from 'react';
+import { useCanvas } from 'hooks';
 
 import * as Styled from './styled';
 
@@ -7,33 +8,53 @@ interface LadderProps {
 }
 
 const Ladder = ({ playerCount }: LadderProps) => {
-  const inputRef = useRef<(HTMLInputElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement[]>([]);
 
-  const handleGameStartButtonClick = () => {
-    for (let input of inputRef.current) {
-      console.log(input?.value);
-    }
-  };
+  const { canvasRef, width, height } = useCanvas({
+    draw: (canvas, ctx) => {
+      const canvasRect = canvas.getBoundingClientRect();
+
+      for (let i = 0; i < inputRef.current.length / 2; i++) {
+        const inputRect = inputRef.current[i].getBoundingClientRect();
+        const startPos = {
+          x: inputRect.x + inputRect.width / 2 - canvasRect.left,
+          y: 0,
+        };
+        const endPos = {
+          x: inputRect.x + inputRect.width / 2 - canvasRect.left,
+          y: canvas.height,
+        };
+
+        ctx.beginPath();
+        ctx.moveTo(startPos.x, startPos.y);
+        ctx.lineTo(endPos.x, endPos.y);
+        ctx.stroke();
+        ctx.closePath();
+      }
+    },
+  });
 
   return (
-    <Styled.Container playerCount={playerCount}>
+    <Styled.Container ref={containerRef} playerCount={playerCount}>
       {new Array(playerCount * 2).fill(0).map((_, idx) => (
         <Fragment key={`id_${idx}`}>
-          <input
+          <Styled.Input
             type="text"
-            ref={(el) => (inputRef.current[idx] = el)}
+            ref={(el) => el && (inputRef.current[idx] = el)}
             placeholder={`${idx < playerCount ? 'Player' : 'Goal'} ${(idx % playerCount) + 1}`}
           />
-          {idx === playerCount - 1 && <div className="ladder">Ladder</div>}
+
+          {idx === playerCount - 1 && (
+            <Styled.Ladder ref={canvasRef} width={width} height={height} playerCount={playerCount} />
+          )}
         </Fragment>
       ))}
 
-      <div className="controller">
+      <Styled.Controller playerCount={playerCount}>
         <button type="button">취소</button>
-        <button type="button" onClick={handleGameStartButtonClick}>
-          시작
-        </button>
-      </div>
+        <button type="button">시작</button>
+      </Styled.Controller>
     </Styled.Container>
   );
 };
