@@ -1,5 +1,5 @@
 import { Fragment, useRef } from 'react';
-import { useCanvas } from 'hooks';
+import { useGame, useCanvas } from 'hooks';
 
 import * as Styled from './styled';
 
@@ -11,6 +11,8 @@ interface LadderProps {
 const Ladder = ({ playerCount, onCancle }: LadderProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
+
+  const { ladder, game } = useGame({ playerCount });
 
   const { canvasRef, width, height } = useCanvas({
     draw: (canvas, ctx) => {
@@ -36,6 +38,10 @@ const Ladder = ({ playerCount, onCancle }: LadderProps) => {
     },
   });
 
+  const handleGameStartButtonClick = () => {
+    game();
+  };
+
   return (
     <Styled.Container ref={containerRef} playerCount={playerCount}>
       {new Array(playerCount * 2).fill(0).map((_, idx) => (
@@ -56,7 +62,9 @@ const Ladder = ({ playerCount, onCancle }: LadderProps) => {
         <button type="button" onClick={onCancle}>
           취소
         </button>
-        <button type="button">시작</button>
+        <button type="button" onClick={handleGameStartButtonClick}>
+          시작
+        </button>
       </Styled.Controller>
     </Styled.Container>
   );
