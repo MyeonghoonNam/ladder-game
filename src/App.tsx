@@ -1,12 +1,12 @@
-import { type ChangeEvent, useState, useEffect } from 'react';
-import { PlayerCounter, InputList } from './components';
+import { useState, useEffect } from 'react';
+import { PlayerCounter, Ladder } from './components';
 import { FlexBox } from './styles/common';
 import * as Styled from './styled';
 
+const INITIAL_COUNT = 2;
+
 function App() {
-  const [count, setCount] = useState(2);
-  const [players, setPlayers] = useState(['']);
-  const [destination, setDestination] = useState(['']);
+  const [count, setCount] = useState(INITIAL_COUNT);
   const [hasCount, setHasCount] = useState(false);
 
   const decrementCount = () => {
@@ -21,19 +21,19 @@ function App() {
     setHasCount(true);
   };
 
-  const handlePlayerInputChange = (idx: number, e: ChangeEvent<HTMLInputElement>) => {
-    setPlayers((state) => state.map((v, i) => (i === idx ? e.target.value : v)));
-  };
-
-  const handleDestinationInputChange = (idx: number, e: ChangeEvent<HTMLInputElement>) => {
-    setDestination((state) => state.map((v, i) => (i === idx ? e.target.value : v)));
+  const handleCancleButtonClick = () => {
+    setHasCount(false);
+    setCount(INITIAL_COUNT);
   };
 
   useEffect(() => {
-    const inputList = hasCount ? new Array(count).fill('') : [''];
-    setPlayers(inputList);
-    setDestination(inputList);
-  }, [hasCount]);
+    const setScreenSize = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setScreenSize();
+  }, []);
 
   return (
     <Styled.Container className="App">
@@ -49,10 +49,7 @@ function App() {
           </button>
         </FlexBox>
       ) : (
-        <FlexBox>
-          <InputList values={players} onChange={handlePlayerInputChange} />
-          <InputList values={destination} onChange={handleDestinationInputChange} />
-        </FlexBox>
+        <Ladder playerCount={count} onCancle={handleCancleButtonClick} />
       )}
     </Styled.Container>
   );
