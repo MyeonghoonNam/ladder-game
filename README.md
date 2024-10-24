@@ -14,5 +14,5 @@ npx ladder-game
 
 ## Wiki
 
-Documented experience with the software development cycle. <br/>
+Record development experience. <br/>
 [Read more](https://github.com/MyeonghoonNam/ladder-game/wiki)
