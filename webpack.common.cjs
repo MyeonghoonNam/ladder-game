@@ -13,8 +13,10 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       components: path.resolve(__dirname, 'src/components'),
+      constants: path.resolve(__dirname, 'src/constants'),
       hooks: path.resolve(__dirname, 'src/hooks'),
       models: path.resolve(__dirname, 'src/models'),
+      reducers: path.resolve(__dirname, 'src/reducers'),
       styles: path.resolve(__dirname, 'src/styles'),
     },
   },
