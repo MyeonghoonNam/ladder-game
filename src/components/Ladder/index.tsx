@@ -1,5 +1,6 @@
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useImmerReducer } from 'use-immer';
+import { Modal } from 'components';
 import { useCanvas } from 'hooks';
 import { gameReducer, initialState } from 'reducers/game';
 
@@ -15,6 +16,7 @@ const Ladder = ({ playerCount, onCancle }: LadderProps) => {
   const inputRef = useRef<HTMLInputElement[]>([]);
 
   const [ladder, dispatch] = useImmerReducer(gameReducer, initialState);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { canvasRef, width, height } = useCanvas({
     draw: (canvas, ctx) => {
@@ -87,6 +89,13 @@ const Ladder = ({ playerCount, onCancle }: LadderProps) => {
   });
 
   const handleGameStartButtonClick = () => {
+    const hasEmptyInput = inputRef.current.some((el) => !Boolean(el.value));
+
+    if (hasEmptyInput) {
+      setIsOpen(true);
+      return;
+    }
+
     dispatch({
       type: 'start_game',
       width: playerCount - 1,
@@ -118,6 +127,10 @@ const Ladder = ({ playerCount, onCancle }: LadderProps) => {
           시작
         </button>
       </Styled.Controller>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <p>빈 칸을 모두 채워주세요.</p>
+      </Modal>
     </Styled.Container>
   );
 };
