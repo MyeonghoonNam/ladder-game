@@ -14,9 +14,21 @@ export const Ladder = styled.canvas<{ playerCount: number }>`
   height: 100%;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ readOnly: boolean }>`
   margin: 0;
   padding: 0;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 13px;
+
+  cursor: ${(props) => (props.readOnly ? 'pointer' : 'text')};
+
+  &:focus {
+    ${(props) =>
+      props.readOnly && {
+        outline: 'none',
+      }}
+  }
 `;
 
 export const Controller = styled.div<{ playerCount: number }>`

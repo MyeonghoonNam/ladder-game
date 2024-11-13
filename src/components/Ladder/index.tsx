@@ -241,6 +241,7 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
             type="text"
             ref={(el) => el && (inputRef.current[idx] = el)}
             placeholder={`${idx < playerCount ? 'Player' : 'Goal'} ${(idx % playerCount) + 1}`}
+            readOnly={isGameProgress}
             onClick={() => handleInputButtonClick(idx)}
           />
 
