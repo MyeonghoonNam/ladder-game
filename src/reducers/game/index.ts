@@ -73,10 +73,6 @@ export function gameReducer(state: Ladder, action: Action) {
   };
 
   switch (action.type) {
-    case 'init_game': {
-      return;
-    }
-
     case 'start_game': {
       const { width, height } = action;
 
