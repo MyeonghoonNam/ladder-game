@@ -12,3 +12,8 @@ export interface LadderContactPoint {
   };
   contactedVerticalLineIdx: number;
 }
+
+export interface LadderSelectedInput {
+  selectedInputLineIdx: number;
+  selectedInputIdx: number;
+}

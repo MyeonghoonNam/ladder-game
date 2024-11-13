@@ -3,7 +3,7 @@ import { useImmerReducer } from 'use-immer';
 import { Modal } from 'components';
 import { useCanvas } from 'hooks';
 import { gameReducer, initialState } from 'reducers/game';
-import { type LadderContactPoint } from 'models';
+import { type LadderContactPoint, type LadderSelectedInput } from 'models';
 
 import * as Styled from './styled';
 
@@ -16,7 +16,7 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
   const [ladder, dispatch] = useImmerReducer(gameReducer, initialState);
-  const [selectedLineIdx, setSelectedLineIdx] = useState<number | null>(null);
+  const [selectedInput, setSelectedInput] = useState<LadderSelectedInput | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isGameProgress, setIsGameProgress] = useState(false);
 
@@ -133,15 +133,20 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
       };
 
       const selectedLinePathDraw = () => {
-        if (selectedLineIdx === null) return;
+        if (selectedInput === null) return;
 
-        const rect = inputRef.current[selectedLineIdx].getBoundingClientRect();
+        const rect = inputRef.current[selectedInput.selectedInputIdx].getBoundingClientRect();
+        const isDirTopToBottom = selectedInput.selectedInputIdx < playerCount;
+
+        const startPointIdx = isDirTopToBottom ? 0 : contactPointArray[selectedInput.selectedInputLineIdx].length - 1;
+        const startPoint = contactPointArray[selectedInput.selectedInputLineIdx][startPointIdx];
+
         const currentPoint = {
           x: rect.x + rect.width / 2 - canvasRect.left,
-          y: 0,
+          y: isDirTopToBottom ? 0 : canvas.height,
         };
 
-        let nextPoint: LadderContactPoint | null = contactPointArray[selectedLineIdx][0] ?? null;
+        let nextPoint: LadderContactPoint | null = startPoint ?? null;
 
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 4;
@@ -151,7 +156,7 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
         if (nextPoint === null) {
           ctx.beginPath();
           ctx.moveTo(currentPoint.x, currentPoint.y);
-          ctx.lineTo(currentPoint.x, canvasRect.height);
+          ctx.lineTo(currentPoint.x, isDirTopToBottom ? canvas.height : 0);
           ctx.stroke();
           ctx.closePath();
 
@@ -162,31 +167,35 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
           ctx.beginPath();
           ctx.moveTo(currentPoint.x, currentPoint.y);
 
-          // 수직 이동
+          // vertical move
           ctx.lineTo(nextPoint.coords.x, nextPoint.coords.y);
 
-          // 수평 및 대각 이동
+          // horizontal and diagonal move
           ctx.lineTo(nextPoint.connectedPointCoords.x, nextPoint.connectedPointCoords.y);
           ctx.stroke();
           ctx.closePath();
 
-          const [lastContactPoint] = contactPointArray[nextPoint.contactedVerticalLineIdx].slice(-1);
+          const lastContactPointIdx = isDirTopToBottom
+            ? contactPointArray[nextPoint.contactedVerticalLineIdx].length - 1
+            : 0;
+
+          const lastContactPoint = contactPointArray[nextPoint.contactedVerticalLineIdx][lastContactPointIdx];
 
           if (
             lastContactPoint.coords.x === nextPoint.connectedPointCoords.x &&
             lastContactPoint.coords.y === nextPoint.connectedPointCoords.y
           ) {
-            // 최종 수직 이동
+            // final vertical move
             ctx.beginPath();
             ctx.moveTo(nextPoint.connectedPointCoords.x, nextPoint.connectedPointCoords.y);
-            ctx.lineTo(lastContactPoint.coords.x, canvasRect.height);
+            ctx.lineTo(lastContactPoint.coords.x, isDirTopToBottom ? canvas.height : 0);
             ctx.stroke();
             ctx.closePath();
 
             return;
           }
 
-          const nextPointIdx = contactPointArray[nextPoint.contactedVerticalLineIdx].findIndex(
+          const contactedPointIdx = contactPointArray[nextPoint.contactedVerticalLineIdx].findIndex(
             (point) =>
               point.coords.x === nextPoint?.connectedPointCoords.x &&
               point.coords.y === nextPoint?.connectedPointCoords.y
@@ -195,19 +204,21 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
           currentPoint.x = nextPoint.connectedPointCoords.x;
           currentPoint.y = nextPoint.connectedPointCoords.y;
 
+          const nextPointIdx: number = isDirTopToBottom ? contactedPointIdx + 1 : contactedPointIdx - 1;
+
           nextPoint =
-            nextPointIdx !== -1 ? contactPointArray[nextPoint.contactedVerticalLineIdx][nextPointIdx + 1] : null;
+            contactedPointIdx !== -1 ? contactPointArray[nextPoint.contactedVerticalLineIdx][nextPointIdx] : null;
         }
       };
 
       verticalLineDraw();
       footStoolLineDraw();
 
-      if (selectedLineIdx !== null) {
+      if (selectedInput !== null) {
         selectedLinePathDraw();
       }
     },
-    deps: [ladder, selectedLineIdx],
+    deps: [ladder, selectedInput?.selectedInputIdx],
   });
 
   const handleGameStartButtonClick = () => {
@@ -227,9 +238,12 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
     });
   };
 
-  const handleInputButtonClick = (idx: number) => {
+  const handleInputButtonClick = (selectedInputIdx: number) => {
     if (isGameProgress) {
-      setSelectedLineIdx(idx);
+      setSelectedInput({
+        selectedInputLineIdx: selectedInputIdx % playerCount,
+        selectedInputIdx,
+      });
     }
   };
 
