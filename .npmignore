@@ -1,5 +1,6 @@
 .github
 .prettierrc.cjs
+.nvmrc
 eslint.config.mjs
 rollup.config.mjs
 tsconfig.json
