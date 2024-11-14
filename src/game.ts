@@ -234,22 +234,21 @@ export default function Game({ playerCount, playerNames, destination }: GameProp
     const end: number[] = new Array(ladderGraph[0].length).fill(0);
 
     for (let i = 0; i < ladderGraph[0].length; i++) {
-      const player = Math.floor(i / 3) + 1;
-
       // player start x coordinates
-      if (i % 4 === 0) {
-        visited = Array.from(new Array(ladderGraph.length), () => new Array(ladderGraph[0].length).fill(0));
+      if (i % 4 !== 0) continue;
 
-        const pos = move(0, i);
+      visited = Array.from(new Array(ladderGraph.length), () => new Array(ladderGraph[0].length).fill(0));
 
-        start[i] = player;
-        end[pos] = player;
+      const player = Math.floor(i / 4) + 1;
+      const pos = move(0, i);
 
-        result[Math.floor(i / 4) + 1] = {
-          name: playerNames[Math.floor(i / 4)],
-          goal: destination[Math.floor(pos / 4)],
-        };
-      }
+      start[i] = player;
+      end[pos] = player;
+
+      result[Math.floor(i / 4) + 1] = {
+        name: playerNames[Math.floor(i / 4)],
+        goal: destination[Math.floor(pos / 4)],
+      };
     }
 
     const startResult = start.map((v, i) => (i % 4 === 0 ? v : ' ')).join('');
