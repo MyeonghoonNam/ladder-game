@@ -127,7 +127,7 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
           }
         }
 
-        for (let lineIdx in contactPointArray) {
+        for (const lineIdx in contactPointArray) {
           contactPointArray[lineIdx].sort((a, b) => a.coords.y - b.coords.y);
         }
       };
@@ -195,7 +195,7 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
             return;
           }
 
-          const contactedPointIdx = contactPointArray[nextPoint.contactedVerticalLineIdx].findIndex(
+          const contactedPointIdx: number = contactPointArray[nextPoint.contactedVerticalLineIdx].findIndex(
             (point) =>
               point.coords.x === nextPoint?.connectedPointCoords.x &&
               point.coords.y === nextPoint?.connectedPointCoords.y
@@ -218,11 +218,10 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
         selectedLinePathDraw();
       }
     },
-    deps: [ladder, selectedInput?.selectedInputIdx],
   });
 
   const handleGameStartButtonClick = () => {
-    const hasEmptyInput = inputRef.current.some((el) => !Boolean(el.value));
+    const hasEmptyInput = inputRef.current.some((el) => !el.value);
 
     if (hasEmptyInput) {
       setIsOpen(true);
