@@ -36,7 +36,7 @@ export function gameReducer(state: Ladder, action: Action) {
    * function to fill an empty ladder with random LADDER_FOOT_STOOLS
    */
   const randomFill = (width: number, height: number) => {
-    let totalFootStoolCount = randomFootStoolCount(width, height);
+    const totalFootStoolCount = randomFootStoolCount(width, height);
     let count = 0;
 
     while (totalFootStoolCount !== count) {
