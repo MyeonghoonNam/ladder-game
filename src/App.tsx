@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { PlayerCounter, Ladder } from './components';
-import { FlexBox } from './styles/common';
+import { useFunnel } from 'hooks';
+
 import * as Styled from './styled';
 
 const INITIAL_COUNT = 2;
+const LADDER_GAME_STEPS = ['counter', 'game', 'result'] as const;
 
-function App() {
+export default function App() {
   const [count, setCount] = useState(INITIAL_COUNT);
-  const [hasCount, setHasCount] = useState(false);
+  const [Funnel, nextStep] = useFunnel(LADDER_GAME_STEPS, { initialStep: 'counter' });
 
   const decrementCount = () => {
     setCount((state) => state - 1);
@@ -17,12 +19,7 @@ function App() {
     setCount((state) => state + 1);
   };
 
-  const handleCountSetupButtonClick = () => {
-    setHasCount(true);
-  };
-
   const handleCancleButtonClick = () => {
-    setHasCount(false);
     setCount(INITIAL_COUNT);
   };
 
@@ -37,22 +34,35 @@ function App() {
 
   return (
     <Styled.Container className="App">
-      {!hasCount ? (
-        <FlexBox>
+      <Funnel>
+        <Funnel.Step name="counter">
           <PlayerCounter
             count={count}
             onDecrementButtonClick={decrementCount}
             onIncrementButtonClick={incrementCount}
           />
-          <button type="button" onClick={handleCountSetupButtonClick}>
+          <button type="button" onClick={() => nextStep('game')}>
             확인
           </button>
-        </FlexBox>
-      ) : (
-        <Ladder playerCount={count} onCancle={handleCancleButtonClick} />
-      )}
+        </Funnel.Step>
+        <Funnel.Step name="game">
+          <Ladder playerCount={count} onCancle={handleCancleButtonClick} />
+          <button type="button" onClick={() => nextStep('result')}>
+            확인
+          </button>
+        </Funnel.Step>
+        <Funnel.Step name="result">
+          <div>Result !!</div>
+          <button
+            type="button"
+            onClick={() => {
+              nextStep('counter');
+              setCount(INITIAL_COUNT);
+            }}>
+            초기화
+          </button>
+        </Funnel.Step>
+      </Funnel>
     </Styled.Container>
   );
 }
-
-export default App;
