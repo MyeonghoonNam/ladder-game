@@ -9,10 +9,11 @@ import * as Styled from './styled';
 
 interface LadderProps {
   playerCount: number;
-  onCancle?: () => void;
+  onPrev?: () => void;
+  onNext?: () => void;
 }
 
-export default function Ladder({ playerCount, onCancle }: LadderProps) {
+export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
   const [ladder, dispatch] = useImmerReducer(gameReducer, initialState);
@@ -221,6 +222,11 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
   });
 
   const handleGameStartButtonClick = () => {
+    if (isGameProgress && onNext) {
+      onNext();
+      return;
+    }
+
     const hasEmptyInput = inputRef.current.some((el) => !el.value);
 
     if (hasEmptyInput) {
@@ -265,11 +271,11 @@ export default function Ladder({ playerCount, onCancle }: LadderProps) {
       ))}
 
       <Styled.Controller playerCount={playerCount}>
-        <button type="button" onClick={onCancle}>
+        <button type="button" onClick={onPrev}>
           취소
         </button>
         <button type="button" onClick={handleGameStartButtonClick}>
-          시작
+          {isGameProgress ? '확인' : '시작'}
         </button>
       </Styled.Controller>
 
