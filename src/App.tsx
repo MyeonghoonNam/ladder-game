@@ -19,10 +19,6 @@ export default function App() {
     setCount((state) => state + 1);
   };
 
-  const handleCancleButtonClick = () => {
-    setCount(INITIAL_COUNT);
-  };
-
   useEffect(() => {
     const setScreenSize = () => {
       const vh = window.innerHeight * 0.01;
@@ -46,10 +42,7 @@ export default function App() {
           </button>
         </Funnel.Step>
         <Funnel.Step name="game">
-          <Ladder playerCount={count} onCancle={handleCancleButtonClick} />
-          <button type="button" onClick={() => nextStep('result')}>
-            확인
-          </button>
+          <Ladder playerCount={count} onNext={() => nextStep('result')} onPrev={() => nextStep('counter')} />
         </Funnel.Step>
         <Funnel.Step name="result">
           <div>Result !!</div>
