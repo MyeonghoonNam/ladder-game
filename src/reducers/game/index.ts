@@ -1,19 +1,26 @@
 import { LADDER_FOOT_STOOLS } from 'constants/ladder';
-import { type Ladder } from 'models';
+import { type Ladder, type LadderGameResult } from 'models';
 
-type Action =
-  | { type: 'start_game'; width: number; height: number }
-  | { type: 'init_game'; width: number; height: number }
-  | { type: 'start_game'; width: number; height: number };
+interface State {
+  ladder: Ladder;
+  result: LadderGameResult[];
+}
 
-export const initialState: Ladder = [[]];
+type Action = { type: 'start_game'; width: number; height: number };
 
-export function gameReducer(state: Ladder, action: Action) {
+export const initialState: State = {
+  ladder: [],
+  result: [],
+};
+
+export function gameReducer(state: State, action: Action) {
   /**
    * ladder structure initialization function without footStool
    */
   const reset = (width: number, height: number) => {
-    state = Array.from(new Array(height), () => new Array(width).fill(''));
+    state.ladder = Array.from(new Array(height), () =>
+      new Array(width).fill('').map((v, i) => (i % 2 === 0 ? '|' : v))
+    );
   };
 
   /**
@@ -36,15 +43,17 @@ export function gameReducer(state: Ladder, action: Action) {
    * function to fill an empty ladder with random LADDER_FOOT_STOOLS
    */
   const randomFill = (width: number, height: number) => {
-    const totalFootStoolCount = randomFootStoolCount(width, height);
+    const totalFootStoolCount = randomFootStoolCount(width % 2, height);
     let count = 0;
 
     while (totalFootStoolCount !== count) {
       const x = Math.floor(Math.random() * width);
       const y = Math.floor(Math.random() * height);
 
-      state[y][x] = randomFootStool();
-      count += 1;
+      if (state.ladder[y][x] === '') {
+        state.ladder[y][x] = randomFootStool();
+        count += 1;
+      }
     }
   };
 
@@ -54,16 +63,16 @@ export function gameReducer(state: Ladder, action: Action) {
    */
   const analyze = (width: number, height: number) => {
     for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width - 1; j++) {
-        if (state[i][j] === LADDER_FOOT_STOOLS[0] && state[i][j + 1] === LADDER_FOOT_STOOLS[0]) {
+      for (let j = 1; j < width - 1; j++) {
+        if (state.ladder[i][j - 1] === LADDER_FOOT_STOOLS[0] && state.ladder[i][j + 1] === LADDER_FOOT_STOOLS[0]) {
           return false;
         }
 
-        if (state[i][j] === LADDER_FOOT_STOOLS[1] && state[i][j + 1] === LADDER_FOOT_STOOLS[2]) {
+        if (state.ladder[i][j - 1] === LADDER_FOOT_STOOLS[1] && state.ladder[i][j + 1] === LADDER_FOOT_STOOLS[2]) {
           return false;
         }
 
-        if (state[i][j] === LADDER_FOOT_STOOLS[2] && state[i][j + 1] === LADDER_FOOT_STOOLS[1]) {
+        if (state.ladder[i][j - 1] === LADDER_FOOT_STOOLS[2] && state.ladder[i][j + 1] === LADDER_FOOT_STOOLS[1]) {
           return false;
         }
       }
@@ -82,10 +91,6 @@ export function gameReducer(state: Ladder, action: Action) {
       } while (!analyze(width, height));
 
       return state;
-    }
-
-    default: {
-      new Error();
     }
   }
 }
