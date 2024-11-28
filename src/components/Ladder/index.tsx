@@ -1,22 +1,21 @@
 import { Fragment, useRef, useState } from 'react';
-import { useImmerReducer } from 'use-immer';
 import { Modal } from 'components';
 import { useCanvas } from 'hooks';
-import { gameReducer, initialState } from 'reducers/game';
-import { type LadderContactPoint, type LadderSelectedInput } from 'models';
+import { type Ladder, type LadderConnectedPoint, type LadderSelectedInput } from 'models';
 
 import * as Styled from './styled';
 
 interface LadderProps {
+  ladder: Ladder;
   playerCount: number;
+  onStartGame: (players: string[], goals: string[]) => void;
   onPrev?: () => void;
   onNext?: () => void;
 }
 
-export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
+export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNext }: LadderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
-  const [ladder, dispatch] = useImmerReducer(gameReducer, initialState);
   const [selectedInput, setSelectedInput] = useState<LadderSelectedInput | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isGameProgress, setIsGameProgress] = useState(false);
@@ -24,7 +23,8 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
   const { canvasRef, width, height } = useCanvas({
     draw: (canvas, ctx) => {
       const canvasRect = canvas.getBoundingClientRect();
-      const contactPointArray: LadderContactPoint[][] = Array.from(new Array(playerCount), () => []);
+      const connectedPointArray: LadderConnectedPoint[][] = Array.from(new Array(playerCount), () => []);
+      const ladderHeight = ladder.length;
 
       ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
 
@@ -34,18 +34,20 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
       const verticalLineDraw = () => {
         for (let i = 0; i < inputRef.current.length / 2; i++) {
           const inputRect = inputRef.current[i].getBoundingClientRect();
-          const leftPos = {
+
+          const startPos = {
             x: inputRect.x + inputRect.width / 2 - canvasRect.left,
             y: 0,
           };
-          const rightPos = {
+
+          const endPos = {
             x: inputRect.x + inputRect.width / 2 - canvasRect.left,
-            y: canvas.height,
+            y: canvasRect.height,
           };
 
           ctx.beginPath();
-          ctx.moveTo(leftPos.x, leftPos.y);
-          ctx.lineTo(rightPos.x, rightPos.y);
+          ctx.moveTo(startPos.x, startPos.y);
+          ctx.lineTo(endPos.x, endPos.y);
           ctx.stroke();
           ctx.closePath();
         }
@@ -55,8 +57,13 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
         for (let i = 0; i < ladder.length; i++) {
           for (let j = 0; j < ladder[i].length; j++) {
             const footStool = ladder[i][j];
-            const leftInputRect = inputRef.current[j].getBoundingClientRect();
-            const rightInputRect = inputRef.current[j + 1].getBoundingClientRect();
+
+            if (footStool === '' || footStool === '|') continue;
+
+            const connectedLeftVerticalLineIdx = Math.floor(j / 2);
+            const connectedRightVerticalLineIdx = connectedLeftVerticalLineIdx + (j % 2);
+            const leftInputRect = inputRef.current[connectedLeftVerticalLineIdx].getBoundingClientRect();
+            const rightInputRect = inputRef.current[connectedRightVerticalLineIdx].getBoundingClientRect();
 
             const leftPos = {
               x: 0,
@@ -70,23 +77,23 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
 
             if (footStool === '---') {
               leftPos.x = leftInputRect.x + leftInputRect.width / 2 - canvasRect.left;
-              leftPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.5;
+              leftPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.5;
               rightPos.x = rightInputRect.x + rightInputRect.width / 2 - canvasRect.left;
-              rightPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.5;
+              rightPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.5;
             }
 
             if (footStool === '/-/') {
               leftPos.x = leftInputRect.x + leftInputRect.width / 2 - canvasRect.left;
-              leftPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.75;
+              leftPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.75;
               rightPos.x = rightInputRect.x + rightInputRect.width / 2 - canvasRect.left;
-              rightPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.15;
+              rightPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.15;
             }
 
             if (footStool === '\\-\\') {
               leftPos.x = leftInputRect.x + leftInputRect.width / 2 - canvasRect.left;
-              leftPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.15;
+              leftPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.15;
               rightPos.x = rightInputRect.x + rightInputRect.width / 2 - canvasRect.left;
-              rightPos.y = i * (canvasRect.height / 5) + (canvasRect.height / 5) * 0.75;
+              rightPos.y = i * (canvasRect.height / ladderHeight) + (canvasRect.height / ladderHeight) * 0.75;
             }
 
             ctx.beginPath();
@@ -95,59 +102,54 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
             ctx.stroke();
             ctx.closePath();
 
-            const currentVerticalLineIdx = j % playerCount;
-            const contactedVerticalLineIdx = currentVerticalLineIdx + 1;
+            connectedPointArray[connectedLeftVerticalLineIdx].push({
+              coords: {
+                x: leftPos.x,
+                y: leftPos.y,
+              },
+              verticalLineIdx: connectedLeftVerticalLineIdx,
+              connectedPointCoords: {
+                x: rightPos.x,
+                y: rightPos.y,
+              },
+              connectedPointVerticalLineIdx: connectedRightVerticalLineIdx,
+            });
 
-            if (footStool !== '') {
-              contactPointArray[currentVerticalLineIdx].push({
-                coords: {
-                  x: leftPos.x,
-                  y: leftPos.y,
-                },
-                verticalLineIdx: currentVerticalLineIdx,
-                connectedPointCoords: {
-                  x: rightPos.x,
-                  y: rightPos.y,
-                },
-                contactedVerticalLineIdx,
-              });
-
-              contactPointArray[contactedVerticalLineIdx].push({
-                coords: {
-                  x: rightPos.x,
-                  y: rightPos.y,
-                },
-                verticalLineIdx: contactedVerticalLineIdx,
-                connectedPointCoords: {
-                  x: leftPos.x,
-                  y: leftPos.y,
-                },
-                contactedVerticalLineIdx: currentVerticalLineIdx,
-              });
-            }
+            connectedPointArray[connectedRightVerticalLineIdx].push({
+              coords: {
+                x: rightPos.x,
+                y: rightPos.y,
+              },
+              verticalLineIdx: connectedRightVerticalLineIdx,
+              connectedPointCoords: {
+                x: leftPos.x,
+                y: leftPos.y,
+              },
+              connectedPointVerticalLineIdx: connectedLeftVerticalLineIdx,
+            });
           }
         }
 
-        for (const lineIdx in contactPointArray) {
-          contactPointArray[lineIdx].sort((a, b) => a.coords.y - b.coords.y);
+        for (const lineIdx in connectedPointArray) {
+          connectedPointArray[lineIdx].sort((a, b) => a.coords.y - b.coords.y);
         }
       };
 
       const selectedLinePathDraw = () => {
         if (selectedInput === null) return;
 
-        const rect = inputRef.current[selectedInput.selectedInputIdx].getBoundingClientRect();
+        const inputRect = inputRef.current[selectedInput.selectedInputIdx].getBoundingClientRect();
         const isDirTopToBottom = selectedInput.selectedInputIdx < playerCount;
 
-        const startPointIdx = isDirTopToBottom ? 0 : contactPointArray[selectedInput.selectedInputLineIdx].length - 1;
-        const startPoint = contactPointArray[selectedInput.selectedInputLineIdx][startPointIdx];
+        const startPointIdx = isDirTopToBottom ? 0 : connectedPointArray[selectedInput.selectedInputLineIdx].length - 1;
+        const startPoint = connectedPointArray[selectedInput.selectedInputLineIdx][startPointIdx];
 
         const currentPoint = {
-          x: rect.x + rect.width / 2 - canvasRect.left,
-          y: isDirTopToBottom ? 0 : canvas.height,
+          x: inputRect.x + inputRect.width / 2 - canvasRect.left,
+          y: isDirTopToBottom ? 0 : canvasRect.height,
         };
 
-        let nextPoint: LadderContactPoint | null = startPoint ?? null;
+        let nextPoint: LadderConnectedPoint | null = startPoint ?? null;
 
         ctx.strokeStyle = 'red';
         ctx.lineWidth = 4;
@@ -157,7 +159,7 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
         if (nextPoint === null) {
           ctx.beginPath();
           ctx.moveTo(currentPoint.x, currentPoint.y);
-          ctx.lineTo(currentPoint.x, isDirTopToBottom ? canvas.height : 0);
+          ctx.lineTo(currentPoint.x, isDirTopToBottom ? canvasRect.height : 0);
           ctx.stroke();
           ctx.closePath();
 
@@ -177,10 +179,10 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
           ctx.closePath();
 
           const lastContactPointIdx = isDirTopToBottom
-            ? contactPointArray[nextPoint.contactedVerticalLineIdx].length - 1
+            ? connectedPointArray[nextPoint.connectedPointVerticalLineIdx].length - 1
             : 0;
 
-          const lastContactPoint = contactPointArray[nextPoint.contactedVerticalLineIdx][lastContactPointIdx];
+          const lastContactPoint = connectedPointArray[nextPoint.connectedPointVerticalLineIdx][lastContactPointIdx];
 
           if (
             lastContactPoint.coords.x === nextPoint.connectedPointCoords.x &&
@@ -189,14 +191,14 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
             // final vertical move
             ctx.beginPath();
             ctx.moveTo(nextPoint.connectedPointCoords.x, nextPoint.connectedPointCoords.y);
-            ctx.lineTo(lastContactPoint.coords.x, isDirTopToBottom ? canvas.height : 0);
+            ctx.lineTo(lastContactPoint.coords.x, isDirTopToBottom ? canvasRect.height : 0);
             ctx.stroke();
             ctx.closePath();
 
             return;
           }
 
-          const contactedPointIdx: number = contactPointArray[nextPoint.contactedVerticalLineIdx].findIndex(
+          const contactedPointIdx: number = connectedPointArray[nextPoint.connectedPointVerticalLineIdx].findIndex(
             (point) =>
               point.coords.x === nextPoint?.connectedPointCoords.x &&
               point.coords.y === nextPoint?.connectedPointCoords.y
@@ -208,7 +210,9 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
           const nextPointIdx: number = isDirTopToBottom ? contactedPointIdx + 1 : contactedPointIdx - 1;
 
           nextPoint =
-            contactedPointIdx !== -1 ? contactPointArray[nextPoint.contactedVerticalLineIdx][nextPointIdx] : null;
+            contactedPointIdx !== -1
+              ? connectedPointArray[nextPoint.connectedPointVerticalLineIdx][nextPointIdx]
+              : null;
         }
       };
 
@@ -236,11 +240,11 @@ export default function Ladder({ playerCount, onPrev, onNext }: LadderProps) {
 
     setIsGameProgress(true);
 
-    dispatch({
-      type: 'start_game',
-      width: playerCount - 1,
-      height: 5,
-    });
+    const inputValues = inputRef.current.map((el) => el.value);
+    const players = inputValues.slice(0, playerCount);
+    const goals = inputValues.slice(playerCount);
+
+    onStartGame(players, goals);
   };
 
   const handleInputButtonClick = (selectedInputIdx: number) => {

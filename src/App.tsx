@@ -1,22 +1,26 @@
 import { useState, useEffect } from 'react';
-import { PlayerCounter, Ladder } from './components';
+import { useImmerReducer } from 'use-immer';
+import { PlayerCounter, Ladder, Result } from './components';
 import { useFunnel } from 'hooks';
+import { gameReducer, initialState } from 'reducers/game';
 
 import * as Styled from './styled';
 
 const INITIAL_COUNT = 2;
+const LADDER_HEIGHT = 5;
 const LADDER_GAME_STEPS = ['counter', 'game', 'result'] as const;
 
 export default function App() {
-  const [count, setCount] = useState(INITIAL_COUNT);
+  const [playerCount, setPlayerCount] = useState(INITIAL_COUNT);
   const [Funnel, nextStep] = useFunnel(LADDER_GAME_STEPS, { initialStep: 'counter' });
+  const [game, dispatch] = useImmerReducer(gameReducer, initialState);
 
   const decrementCount = () => {
-    setCount((state) => state - 1);
+    setPlayerCount((state) => state - 1);
   };
 
   const incrementCount = () => {
-    setCount((state) => state + 1);
+    setPlayerCount((state) => state + 1);
   };
 
   useEffect(() => {
@@ -33,7 +37,7 @@ export default function App() {
       <Funnel>
         <Funnel.Step name="counter">
           <PlayerCounter
-            count={count}
+            count={playerCount}
             onDecrementButtonClick={decrementCount}
             onIncrementButtonClick={incrementCount}
           />
@@ -42,15 +46,29 @@ export default function App() {
           </button>
         </Funnel.Step>
         <Funnel.Step name="game">
-          <Ladder playerCount={count} onNext={() => nextStep('result')} onPrev={() => nextStep('counter')} />
+          <Ladder
+            ladder={game.ladder}
+            playerCount={playerCount}
+            onNext={() => nextStep('result')}
+            onPrev={() => nextStep('counter')}
+            onStartGame={(players: string[], goals: string[]) => {
+              dispatch({
+                type: 'start_game',
+                width: playerCount * 2 - 1,
+                height: LADDER_HEIGHT,
+                players,
+                goals,
+              });
+            }}
+          />
         </Funnel.Step>
         <Funnel.Step name="result">
-          <div>Result !!</div>
+          <Result result={game.result} />
           <button
             type="button"
             onClick={() => {
               nextStep('counter');
-              setCount(INITIAL_COUNT);
+              setPlayerCount(INITIAL_COUNT);
             }}>
             초기화
           </button>
