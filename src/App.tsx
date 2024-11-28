@@ -51,11 +51,13 @@ export default function App() {
             playerCount={playerCount}
             onNext={() => nextStep('result')}
             onPrev={() => nextStep('counter')}
-            onStartGame={() => {
+            onStartGame={(players: string[], goals: string[]) => {
               dispatch({
                 type: 'start_game',
                 width: playerCount * 2 - 1,
                 height: LADDER_HEIGHT,
+                players,
+                goals,
               });
             }}
           />
