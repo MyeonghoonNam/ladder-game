@@ -1,11 +1,8 @@
-import { Global, css } from '@emotion/react';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 
-const baseStyle = css`
-  /* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
+export const resetStyle = css`
+  /* 기본 CSS 리셋 */
   html,
   body,
   div,
@@ -94,7 +91,8 @@ const baseStyle = css`
     font: inherit;
     vertical-align: baseline;
   }
-  /* HTML5 display-role reset for older browsers */
+
+  /* HTML5 디스플레이 설정 */
   article,
   aside,
   details,
@@ -108,36 +106,44 @@ const baseStyle = css`
   section {
     display: block;
   }
+
   body {
-    margin: 0px;
-    padding: 0px;
     line-height: 1;
   }
+
   ol,
   ul {
     list-style: none;
   }
+
   blockquote,
   q {
     quotes: none;
   }
-  blockquote:before,
-  blockquote:after,
-  q:before,
-  q:after {
+
+  blockquote::before,
+  blockquote::after,
+  q::before,
+  q::after {
     content: '';
     content: none;
   }
+
   table {
     border-collapse: collapse;
     border-spacing: 0;
   }
 
-  :root {
-    --vh: 100%;
+  button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 `;
-
-const GlobalStyle = () => <Global styles={baseStyle} />;
-
-export default GlobalStyle;
