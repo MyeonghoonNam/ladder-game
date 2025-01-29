@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useImmerReducer } from 'use-immer';
 import { PlayerCounter, Ladder, Result, Button, Spacing } from './components';
 import { useFunnel } from 'hooks';
@@ -37,15 +37,6 @@ export default function App() {
     nextStep('counter');
     setPlayerCount(INITIAL_COUNT);
   };
-
-  useEffect(() => {
-    const setScreenSize = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-
-    setScreenSize();
-  }, []);
 
   return (
     <Styled.Container className="App">

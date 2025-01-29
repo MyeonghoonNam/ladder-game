@@ -5,8 +5,8 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  min-height: calc(var(--vh, 1vh) * 100);
+  width: 100vw;
+  height: 100vh;
   background: ${({ theme }) => `linear-gradient(
     135deg,
     ${theme.colors.background.primary} 0%,
@@ -18,13 +18,11 @@ export const Contents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
-  max-width: 800px;
+  width: 70%;
   padding: 2rem;
   border-radius: 16px;
   background-color: ${({ theme }) => theme.colors.background.secondary};
   box-shadow: 0 8px 32px ${({ theme }) => theme.colors.background.overlay};
-  backdrop-filter: blur(4px);
   border: 1px solid ${({ theme }) => theme.colors.border.light};
 `;
 
