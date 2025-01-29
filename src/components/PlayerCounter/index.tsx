@@ -1,3 +1,8 @@
+import { FaPlus, FaMinus } from 'react-icons/fa6';
+import { Button } from 'components';
+
+import * as Styled from './styled';
+
 interface PlayerCountProps {
   count: number;
   onDecrementButtonClick: () => void;
@@ -6,21 +11,17 @@ interface PlayerCountProps {
 
 const PlayerCounter = ({ count, onDecrementButtonClick, onIncrementButtonClick }: PlayerCountProps) => {
   return (
-    <div>
-      {count > 2 && (
-        <button type="button" onClick={onDecrementButtonClick}>
-          -
-        </button>
-      )}
+    <Styled.Container>
+      <Button type="button" size="medium" onClick={onDecrementButtonClick} disabled={count <= 2}>
+        <FaMinus />
+      </Button>
 
-      <span>{count}</span>
+      <Styled.Counter>{count}</Styled.Counter>
 
-      {count < 10 && (
-        <button type="button" onClick={onIncrementButtonClick}>
-          +
-        </button>
-      )}
-    </div>
+      <Button type="button" size="medium" disabled={count >= 10} onClick={onIncrementButtonClick}>
+        <FaPlus />
+      </Button>
+    </Styled.Container>
   );
 };
 
