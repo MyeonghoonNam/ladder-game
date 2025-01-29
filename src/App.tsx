@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useImmerReducer } from 'use-immer';
-import { PlayerCounter, Ladder, Result } from './components';
+import { PlayerCounter, Ladder, Result, Button, Spacing } from './components';
 import { useFunnel } from 'hooks';
 import { gameReducer, initialState } from 'reducers/game';
 
@@ -15,12 +15,27 @@ export default function App() {
   const [Funnel, nextStep] = useFunnel(LADDER_GAME_STEPS, { initialStep: 'counter' });
   const [game, dispatch] = useImmerReducer(gameReducer, initialState);
 
-  const decrementCount = () => {
+  const handleDecrementCountButtonClick = () => {
     setPlayerCount((state) => state - 1);
   };
 
-  const incrementCount = () => {
+  const handleIncrementCountButtonClick = () => {
     setPlayerCount((state) => state + 1);
+  };
+
+  const handleStartGameButtonClick = (players: string[], goals: string[]) => {
+    dispatch({
+      type: 'start_game',
+      width: playerCount * 2 - 1,
+      height: LADDER_HEIGHT,
+      players,
+      goals,
+    });
+  };
+
+  const handleResetGameButtonClick = () => {
+    nextStep('counter');
+    setPlayerCount(INITIAL_COUNT);
   };
 
   useEffect(() => {
@@ -34,46 +49,56 @@ export default function App() {
 
   return (
     <Styled.Container className="App">
-      <Funnel>
-        <Funnel.Step name="counter">
-          <PlayerCounter
-            count={playerCount}
-            onDecrementButtonClick={decrementCount}
-            onIncrementButtonClick={incrementCount}
-          />
-          <button type="button" onClick={() => nextStep('game')}>
-            확인
-          </button>
-        </Funnel.Step>
-        <Funnel.Step name="game">
-          <Ladder
-            ladder={game.ladder}
-            playerCount={playerCount}
-            onNext={() => nextStep('result')}
-            onPrev={() => nextStep('counter')}
-            onStartGame={(players: string[], goals: string[]) => {
-              dispatch({
-                type: 'start_game',
-                width: playerCount * 2 - 1,
-                height: LADDER_HEIGHT,
-                players,
-                goals,
-              });
-            }}
-          />
-        </Funnel.Step>
-        <Funnel.Step name="result">
-          <Result result={game.result} />
-          <button
-            type="button"
-            onClick={() => {
-              nextStep('counter');
-              setPlayerCount(INITIAL_COUNT);
-            }}>
-            초기화
-          </button>
-        </Funnel.Step>
-      </Funnel>
+      <Styled.Contents>
+        <Styled.Header>사다리 게임</Styled.Header>
+        <Spacing size="small" />
+        <Funnel>
+          <Funnel.Step name="counter">
+            <Styled.SubHeader>
+              <p>출발지 수를 선택하세요.</p>
+              <p>※ 최대 10개까지 선택 가능합니다.</p>
+            </Styled.SubHeader>
+
+            <Spacing size="medium" />
+
+            <PlayerCounter
+              count={playerCount}
+              onDecrementButtonClick={handleDecrementCountButtonClick}
+              onIncrementButtonClick={handleIncrementCountButtonClick}
+            />
+
+            <Spacing size="medium" />
+
+            <Styled.Controller>
+              <Button type="button" size="large" onClick={() => nextStep('game')}>
+                확인
+              </Button>
+            </Styled.Controller>
+          </Funnel.Step>
+          <Funnel.Step name="game">
+            <Styled.SubHeader>
+              <p>출발지와 도착지 내용을 입력해주세요.</p>
+            </Styled.SubHeader>
+
+            <Spacing size="medium" />
+
+            <Ladder
+              ladder={game.ladder}
+              playerCount={playerCount}
+              onNext={() => nextStep('result')}
+              onPrev={() => nextStep('counter')}
+              onStartGame={handleStartGameButtonClick}
+            />
+          </Funnel.Step>
+          <Funnel.Step name="result">
+            <Result result={game.result} />
+            <Spacing size="medium" />
+            <Button type="button" variant={'secondary'} size="large" onClick={handleResetGameButtonClick}>
+              초기화
+            </Button>
+          </Funnel.Step>
+        </Funnel>
+      </Styled.Contents>
     </Styled.Container>
   );
 }
