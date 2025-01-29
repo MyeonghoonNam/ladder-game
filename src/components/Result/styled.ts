@@ -15,10 +15,10 @@ export const ResultTitle = styled.h2`
   text-align: center;
 `;
 
-export const ResultList = styled.div`
-  display: flex;
-  flex-direction: column;
+export const ResultList = styled.div<{ columnCount: number }>`
+  display: grid;
   gap: ${({ theme }) => theme.spacing.medium};
+  grid-template-columns: repeat(${({ columnCount }) => columnCount}, minmax(200px, 1fr));
 `;
 
 export const ResultItem = styled.div`

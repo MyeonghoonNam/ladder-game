@@ -9,7 +9,7 @@ export default function Result({ result }: ResultProps) {
   return (
     <Styled.ResultContainer>
       <Styled.ResultTitle>게임 결과</Styled.ResultTitle>
-      <Styled.ResultList>
+      <Styled.ResultList columnCount={result.length <= 5 ? 1 : 2}>
         {result.map(({ start, end }, idx) => (
           <Styled.ResultItem key={`key_${idx}`}>
             <Styled.StartPoint>{start}</Styled.StartPoint>
