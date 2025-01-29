@@ -1,7 +1,8 @@
 import { Fragment, useRef, useState } from 'react';
-import { Modal } from 'components';
+import { Modal, Button } from 'components';
 import { useCanvas } from 'hooks';
-import { type Ladder, type LadderConnectedPoint, type LadderSelectedInput } from 'models';
+import type { Ladder, LadderConnectedPoint, LadderSelectedInput } from 'models';
+import { theme } from 'styles';
 
 import * as Styled from './styled';
 
@@ -28,8 +29,8 @@ export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNex
 
       ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
 
-      ctx.strokeStyle = 'black';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = theme.colors.neutral60;
+      ctx.lineWidth = 2;
 
       const verticalLineDraw = () => {
         for (let i = 0; i < inputRef.current.length / 2; i++) {
@@ -151,8 +152,8 @@ export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNex
 
         let nextPoint: LadderConnectedPoint | null = startPoint ?? null;
 
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 4;
+        ctx.strokeStyle = theme.colors.red40;
+        ctx.lineWidth = 5;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
@@ -275,12 +276,12 @@ export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNex
       ))}
 
       <Styled.Controller playerCount={playerCount}>
-        <button type="button" onClick={onPrev}>
+        <Button type="button" variant={'secondary'} size="large" onClick={onPrev}>
           취소
-        </button>
-        <button type="button" onClick={handleGameStartButtonClick}>
+        </Button>
+        <Button type="button" size="large" onClick={handleGameStartButtonClick}>
           {isGameProgress ? '확인' : '시작'}
-        </button>
+        </Button>
       </Styled.Controller>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
