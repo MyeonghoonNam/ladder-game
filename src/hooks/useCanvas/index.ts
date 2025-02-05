@@ -4,7 +4,7 @@ interface Props {
   draw?: (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => void;
 }
 
-const useCanvas = ({ draw }: Props) => {
+export default function useCanvas({ draw }: Props) {
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
@@ -28,6 +28,4 @@ const useCanvas = ({ draw }: Props) => {
   );
 
   return { canvasRef, width, height };
-};
-
-export default useCanvas;
+}

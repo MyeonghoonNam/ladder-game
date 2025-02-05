@@ -1,27 +1,30 @@
 import { BiRightArrowAlt } from 'react-icons/bi';
 import styled from '@emotion/styled';
 
-export const ResultContainer = styled.div`
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: ${({ theme }) => theme.spacing.large};
   background-color: ${({ theme }) => theme.colors.neutral10};
   border-radius: ${({ theme }) => theme.radius.medium};
   box-shadow: ${({ theme }) => theme.shadows.small};
 `;
 
-export const ResultTitle = styled.h2`
+export const Title = styled.h2`
   ${({ theme }) => theme.typography.heading3};
   color: ${({ theme }) => theme.colors.brown40};
   margin-bottom: ${({ theme }) => theme.spacing.medium};
   text-align: center;
 `;
 
-export const ResultList = styled.div<{ columnCount: number }>`
+export const List = styled.div<{ columnCount: number }>`
   display: grid;
   gap: ${({ theme }) => theme.spacing.medium};
   grid-template-columns: repeat(${({ columnCount }) => columnCount}, minmax(200px, 1fr));
 `;
 
-export const ResultItem = styled.div`
+export const Item = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

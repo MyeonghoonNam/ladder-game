@@ -30,8 +30,10 @@ export function gameReducer(state: State, action: Action) {
    * @param height ladder height
    */
   const reset = (width: number, height: number) => {
-    state.ladder = Array.from(new Array(height), () =>
-      new Array(width).fill('').map((v, i) => (i % 2 === 0 ? '|' : v))
+    state.ladder = Array.from(Array(height), () =>
+      Array(width)
+        .fill('')
+        .map((v, i) => (i % 2 === 0 ? '|' : v))
     );
 
     state.result = [];
@@ -107,7 +109,7 @@ export function gameReducer(state: State, action: Action) {
    * @param height ladder height
    */
   const setLadderGraph = (width: number, height: number) => {
-    ladderGraph = Array.from(new Array(height * 3), () => new Array(width * 2 - 1).fill(0));
+    ladderGraph = Array.from(Array(height * 3), () => Array(width * 2 - 1).fill(0));
 
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
@@ -145,7 +147,9 @@ export function gameReducer(state: State, action: Action) {
       }
     }
 
-    const startAndEndLine = new Array(width * 2 - 1).fill(0).map((_, i) => (i % 4 === 0 ? 1 : 0));
+    const startAndEndLine = Array(width * 2 - 1)
+      .fill(0)
+      .map((_, i) => (i % 4 === 0 ? 1 : 0));
 
     ladderGraph.unshift(startAndEndLine);
     ladderGraph.push(startAndEndLine);
@@ -228,7 +232,7 @@ export function gameReducer(state: State, action: Action) {
     const ladderGraphHeight = ladderGraph.length;
 
     for (let i = 0; i < players.length; i++) {
-      visited = Array.from(new Array(ladderGraphHeight), () => new Array(ladderGraphWidth).fill(0));
+      visited = Array.from(Array(ladderGraphHeight), () => Array(ladderGraphWidth).fill(0));
 
       const player = players[i];
       const goal = goals[move(0, i * 4) / 4];
