@@ -32,12 +32,6 @@ export const Header = styled.h1`
   ${({ theme }) => theme.typography.heading1}
 `;
 
-export const SubHeader = styled.h2`
-  text-align: center;
-  color: ${({ theme }) => theme.colors.neutral90};
-  ${({ theme }) => theme.typography.bodyLarge}
-`;
-
 export const Controller = styled.div`
   display: flex;
   justify-content: center;
