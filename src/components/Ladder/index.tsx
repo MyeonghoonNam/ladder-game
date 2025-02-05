@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState } from 'react';
-import { Modal, Button } from 'components';
+import { Modal, Button, Spacing } from 'components';
 import { useCanvas } from 'hooks';
 import type { Ladder, LadderConnectedPoint, LadderSelectedInput } from 'models';
 import { theme } from 'styles';
@@ -15,7 +15,6 @@ interface LadderProps {
 }
 
 export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNext }: LadderProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement[]>([]);
   const [selectedInput, setSelectedInput] = useState<LadderSelectedInput | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -258,35 +257,46 @@ export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNex
   };
 
   return (
-    <Styled.Container ref={containerRef} playerCount={playerCount}>
-      {new Array(playerCount * 2).fill(0).map((_, idx) => (
-        <Fragment key={`input_${idx}`}>
-          <Styled.Input
-            type="text"
-            ref={(el) => el && (inputRef.current[idx] = el)}
-            placeholder={`${idx < playerCount ? 'Player' : 'Goal'} ${(idx % playerCount) + 1}`}
-            readOnly={isGameProgress}
-            onClick={() => handleInputButtonClick(idx)}
-          />
+    <Styled.Container>
+      <Styled.Header>
+        <p>출발지와 도착지 내용을 입력해주세요.</p>
+      </Styled.Header>
 
-          {idx === playerCount - 1 && (
-            <Styled.Ladder ref={canvasRef} width={width} height={height} playerCount={playerCount} />
-          )}
-        </Fragment>
-      ))}
+      <Spacing size="medium" />
 
-      <Styled.Controller playerCount={playerCount}>
-        <Button type="button" variant={'secondary'} size="large" onClick={onPrev}>
-          취소
-        </Button>
-        <Button type="button" size="large" onClick={handleGameStartButtonClick}>
-          {isGameProgress ? '확인' : '시작'}
-        </Button>
-      </Styled.Controller>
+      <Styled.Ladder playerCount={playerCount}>
+        {Array(playerCount * 2)
+          .fill(0)
+          .map((_, idx) => (
+            <Fragment key={`input_${idx}`}>
+              <Styled.Input
+                type="text"
+                ref={(el) => el && (inputRef.current[idx] = el)}
+                placeholder={`${idx < playerCount ? 'Player' : 'Goal'} ${(idx % playerCount) + 1}`}
+                readOnly={isGameProgress}
+                onClick={() => handleInputButtonClick(idx)}
+              />
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <p>빈 칸을 모두 채워주세요.</p>
-      </Modal>
+              {idx === playerCount - 1 && (
+                <Styled.LadderCanvas ref={canvasRef} width={width} height={height} playerCount={playerCount} />
+              )}
+            </Fragment>
+          ))}
+
+        <Styled.Controller playerCount={playerCount}>
+          <Button type="button" variant={'secondary'} size="large" onClick={onPrev}>
+            취소
+          </Button>
+
+          <Button type="button" size="large" onClick={handleGameStartButtonClick}>
+            {isGameProgress ? '확인' : '시작'}
+          </Button>
+        </Styled.Controller>
+
+        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+          <p>빈 칸을 모두 채워주세요.</p>
+        </Modal>
+      </Styled.Ladder>
     </Styled.Container>
   );
 }

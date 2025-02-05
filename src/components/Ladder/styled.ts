@@ -1,15 +1,26 @@
 import styled from '@emotion/styled';
 
-export const Container = styled.div<{ playerCount: number }>`
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Header = styled.h2`
+  text-align: center;
+  color: ${({ theme }) => theme.colors.neutral90};
+  ${({ theme }) => theme.typography.bodyLarge}
+`;
+
+export const Ladder = styled.div<{ playerCount: number }>`
   position: relative;
   display: grid;
-  width: 80%;
+  width: 100%;
   grid-template-rows: repeat(8, 1fr);
   grid-template-columns: ${({ playerCount }) => `repeat(${playerCount}, 1fr)`};
   column-gap: ${({ theme }) => theme.spacing.medium};
 `;
 
-export const Ladder = styled.canvas<{ playerCount: number }>`
+export const LadderCanvas = styled.canvas<{ playerCount: number }>`
   grid-row: 2 / 7;
   grid-column: 1 / ${({ playerCount }) => playerCount + 1};
   width: 100%;

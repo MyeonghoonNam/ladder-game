@@ -65,12 +65,6 @@ export default function App() {
           </Funnel.Step>
 
           <Funnel.Step name="game">
-            <Styled.SubHeader>
-              <p>출발지와 도착지 내용을 입력해주세요.</p>
-            </Styled.SubHeader>
-
-            <Spacing size="medium" />
-
             <Ladder
               ladder={game.ladder}
               playerCount={playerCount}
