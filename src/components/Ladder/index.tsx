@@ -260,7 +260,7 @@ export default function Ladder({ ladder, playerCount, onStartGame, onPrev, onNex
   return (
     <Styled.Container ref={containerRef} playerCount={playerCount}>
       {new Array(playerCount * 2).fill(0).map((_, idx) => (
-        <Fragment key={`id_${idx}`}>
+        <Fragment key={`input_${idx}`}>
           <Styled.Input
             type="text"
             ref={(el) => el && (inputRef.current[idx] = el)}
