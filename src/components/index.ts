@@ -4,4 +4,4 @@ export { default as Modal } from './Modal';
 export { default as Result } from './Result';
 export { default as Button } from './Button';
 export { default as Spacing } from './Spacing';
-export * from './Funnel';
+export { default as Funnel } from './Funnel';

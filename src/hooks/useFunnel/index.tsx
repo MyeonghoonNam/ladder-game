@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Funnel, Step, type FunnelProps, type StepProps } from 'components';
-import { type NonEmptyArray } from 'models';
+import { Funnel } from 'components';
+import { type FunnelProps, type NonEmptyArray } from 'models';
 
 export default function useFunnel<Steps extends NonEmptyArray<string>>(
   steps: Steps,
@@ -10,20 +10,16 @@ export default function useFunnel<Steps extends NonEmptyArray<string>>(
 ) {
   const [step, setStep] = useState<Steps[number]>(option?.initialStep ?? steps[0]);
 
-  const FunnelComponent = useMemo(
-    () =>
-      Object.assign(
-        (props: Omit<FunnelProps<Steps>, 'steps' | 'step'>) => {
-          return <Funnel<Steps> step={step} steps={steps} {...props} />;
-        },
-        {
-          Step: (props: StepProps<Steps>) => {
-            return <Step {...props} />;
-          },
-        }
-      ),
-    [step, steps]
-  );
+  const FunnelComponent = useMemo(() => {
+    const Component = (props: Omit<FunnelProps<Steps>, 'steps' | 'step'>) => {
+      return <Funnel<Steps> step={step} steps={steps} {...props} />;
+    };
+
+    Component.displayName = 'FunnelComponent';
+    Component.Step = Funnel.Step;
+
+    return Component;
+  }, [step, steps]);
 
   return [FunnelComponent, setStep] as const;
 }
