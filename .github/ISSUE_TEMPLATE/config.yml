@@ -1,5 +1,1 @@
 blank_issues_enabled: false
-contact_links:
-  - name: '❓ 질문 & 기타 문의'
-    url: 'https://github.com/your-repo/discussions'
-    about: '버그 리포트나 기능 요청이 아닌 경우, Discussion을 이용하세요.'
