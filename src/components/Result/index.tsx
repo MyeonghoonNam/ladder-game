@@ -1,23 +1,33 @@
 import { LadderGameResult } from 'models';
+import { Button, Spacing } from 'components';
+
 import * as Styled from './styled';
 
 interface ResultProps {
   result: LadderGameResult[];
+  onReset: () => void;
 }
 
-export default function Result({ result }: ResultProps) {
+export default function Result({ result, onReset }: ResultProps) {
   return (
-    <Styled.ResultContainer>
-      <Styled.ResultTitle>게임 결과</Styled.ResultTitle>
-      <Styled.ResultList columnCount={result.length <= 5 ? 1 : 2}>
+    <Styled.Container>
+      <Styled.Title>게임 결과</Styled.Title>
+
+      <Styled.List columnCount={result.length <= 5 ? 1 : 2}>
         {result.map(({ start, end }) => (
-          <Styled.ResultItem key={`result ${start} to ${end}`}>
+          <Styled.Item key={`result ${start} to ${end}`}>
             <Styled.StartPoint>{start}</Styled.StartPoint>
             <Styled.RightArrow />
             <Styled.EndPoint>{end}</Styled.EndPoint>
-          </Styled.ResultItem>
+          </Styled.Item>
         ))}
-      </Styled.ResultList>
-    </Styled.ResultContainer>
+      </Styled.List>
+
+      <Spacing size="medium" />
+
+      <Button type="button" variant={'secondary'} size="large" onClick={onReset}>
+        초기화
+      </Button>
+    </Styled.Container>
   );
 }
