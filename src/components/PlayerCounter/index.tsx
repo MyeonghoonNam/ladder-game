@@ -10,12 +10,12 @@ interface PlayerCountProps {
   onConfirmButtonClick: () => void;
 }
 
-const PlayerCounter = ({
+export default function PlayerCounter({
   count,
   onDecrementButtonClick,
   onIncrementButtonClick,
   onConfirmButtonClick,
-}: PlayerCountProps) => {
+}: PlayerCountProps) {
   return (
     <Styled.Container>
       <Styled.Header>
@@ -44,6 +44,4 @@ const PlayerCounter = ({
       </Button>
     </Styled.Container>
   );
-};
-
-export default PlayerCounter;
+}

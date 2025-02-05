@@ -6,8 +6,6 @@ export interface SpacingProps {
   inline?: boolean;
 }
 
-const Spacing = ({ size, direction = 'vertical', inline = false }: SpacingProps) => {
+export default function Spacing({ size, direction = 'vertical', inline = false }: SpacingProps) {
   return <Styled.Container size={size} direction={direction} inline={inline} />;
-};
-
-export default Spacing;
+}
