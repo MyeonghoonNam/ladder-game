@@ -36,6 +36,11 @@ export default function App() {
   const handleResetGameButtonClick = () => {
     nextStep('counter');
     setPlayerCount(INITIAL_COUNT);
+    dispatch({
+      type: 'init_game',
+      width: playerCount * 2 - 1,
+      height: LADDER_HEIGHT,
+    });
   };
 
   return (

@@ -6,7 +6,9 @@ interface State {
   result: LadderGameResult[];
 }
 
-type Action = { type: 'start_game'; width: number; height: number; players: string[]; goals: string[] };
+type Action =
+  | { type: 'init_game'; width: number; height: number }
+  | { type: 'start_game'; width: number; height: number; players: string[]; goals: string[] };
 
 export const initialState: State = {
   ladder: [],
@@ -31,6 +33,8 @@ export function gameReducer(state: State, action: Action) {
     state.ladder = Array.from(new Array(height), () =>
       new Array(width).fill('').map((v, i) => (i % 2 === 0 ? '|' : v))
     );
+
+    state.result = [];
   };
 
   /**
@@ -246,6 +250,14 @@ export function gameReducer(state: State, action: Action) {
       } while (!analyze(width, height));
 
       display(width, height, players, goals);
+
+      return state;
+    }
+
+    case 'init_game': {
+      const { width, height } = action;
+
+      reset(width, height);
 
       return state;
     }
