@@ -23,6 +23,10 @@ export default function App() {
     setPlayerCount((state) => state + 1);
   };
 
+  const handleSetPlayerCounterConfirmButtonClick = () => {
+    nextStep('game');
+  };
+
   const handleStartGameButtonClick = (players: string[], goals: string[]) => {
     dispatch({
       type: 'start_game',
@@ -47,30 +51,19 @@ export default function App() {
     <Styled.Container className="App">
       <Styled.Contents>
         <Styled.Header>사다리 게임</Styled.Header>
+
         <Spacing size="small" />
+
         <Funnel>
           <Funnel.Step name="counter">
-            <Styled.SubHeader>
-              <p>출발지 수를 선택하세요.</p>
-              <p>※ 최대 10개까지 선택 가능합니다.</p>
-            </Styled.SubHeader>
-
-            <Spacing size="medium" />
-
             <PlayerCounter
               count={playerCount}
               onDecrementButtonClick={handleDecrementCountButtonClick}
               onIncrementButtonClick={handleIncrementCountButtonClick}
+              onConfirmButtonClick={handleSetPlayerCounterConfirmButtonClick}
             />
-
-            <Spacing size="medium" />
-
-            <Styled.Controller>
-              <Button type="button" size="large" onClick={() => nextStep('game')}>
-                확인
-              </Button>
-            </Styled.Controller>
           </Funnel.Step>
+
           <Funnel.Step name="game">
             <Styled.SubHeader>
               <p>출발지와 도착지 내용을 입력해주세요.</p>
@@ -86,6 +79,7 @@ export default function App() {
               onStartGame={handleStartGameButtonClick}
             />
           </Funnel.Step>
+
           <Funnel.Step name="result">
             <Result result={game.result} />
             <Spacing size="medium" />
