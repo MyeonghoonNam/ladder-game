@@ -15,6 +15,14 @@ export default function App() {
   const [Funnel, nextStep] = useFunnel(LADDER_GAME_STEPS, { initialStep: 'counter' });
   const [game, dispatch] = useImmerReducer(gameReducer, initialState);
 
+  const initGame = () => {
+    dispatch({
+      type: 'init_game',
+      width: playerCount * 2 - 1,
+      height: LADDER_HEIGHT,
+    });
+  };
+
   const handleDecrementCountButtonClick = () => {
     setPlayerCount((state) => state - 1);
   };
@@ -29,6 +37,7 @@ export default function App() {
 
   const handleLadderPrevButtonClick = () => {
     nextStep('counter');
+    initGame();
   };
 
   const handleLadderNextButtonClick = () => {
@@ -48,11 +57,7 @@ export default function App() {
   const handleResetGameButtonClick = () => {
     nextStep('counter');
     setPlayerCount(INITIAL_COUNT);
-    dispatch({
-      type: 'init_game',
-      width: playerCount * 2 - 1,
-      height: LADDER_HEIGHT,
-    });
+    initGame();
   };
 
   return (
