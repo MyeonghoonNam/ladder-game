@@ -11,13 +11,13 @@
     "dev": "webpack-dev-server --config webpack.dev.cjs --open --hot"
   },
   "keywords": [
-    "nodejs",
     "ladder game",
-    "cli"
+    "web",
+    "react"
   ],
   "author": "MyeonghoonNam",
   "license": "ISC",
-  "description": "A ladder game based on the Nodejs CLI",
+  "description": "A ladder game web app",
   "repository": {
     "type": "git",
     "url": "https://github.com/MyeonghoonNam/ladder-game.git"
