@@ -5,22 +5,29 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
-    "outDir": "./dist",
-    "declarationDir": "./dist/types",
+    // "outDir": "./dist",
+    // "declarationDir": "./dist/types",
     "declaration": true,
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "noEmit": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

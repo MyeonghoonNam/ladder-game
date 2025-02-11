@@ -1,6 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 import { useImmerReducer } from 'use-immer';
-import { PlayerCounter, Ladder, Result, Spacing } from './components';
+import { PlayerCounter, Ladder, Result, Spacing } from 'components';
 import { useFunnel } from 'hooks';
 import { gameReducer, initialState } from 'reducers/game';
 
@@ -10,7 +12,7 @@ const INITIAL_COUNT = 2;
 const LADDER_HEIGHT = 5;
 const LADDER_GAME_STEPS = ['counter', 'game', 'result'] as const;
 
-export default function App() {
+export default function MainPageClient() {
   const [playerCount, setPlayerCount] = useState(INITIAL_COUNT);
   const [Funnel, nextStep] = useFunnel(LADDER_GAME_STEPS, { initialStep: 'counter' });
   const [game, dispatch] = useImmerReducer(gameReducer, initialState);

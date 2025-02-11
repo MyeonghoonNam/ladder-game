@@ -4,9 +4,7 @@ import { resetStyle } from './reset';
 export const baseStyle = css`
   ${resetStyle}
 
-  body {
-    font-size: 16px;
-    line-height: 1.5;
+  * {
     font-family:
       'Pretendard Variable',
       Pretendard,
@@ -23,23 +21,9 @@ export const baseStyle = css`
       'Segoe UI Emoji',
       'Segoe UI Symbol',
       sans-serif;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+    box-sizing: border-box;
+    padding: 0;
     margin: 0;
-    font-family: 'Pretendard', sans-serif;
-  }
-
-  p,
-  span,
-  a,
-  button {
-    font-family: 'Pretendard', sans-serif;
   }
 
   :root {
